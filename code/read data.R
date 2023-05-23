@@ -225,3 +225,37 @@ graph2 + geom_vline(xintercept = 329) +geom_vline(xintercept = 348)
 
 
 
+# More time variables
+#variable for years, variable for weeks of month
+##################################################################
+##                         OLS analysis                         ##
+##################################################################
+install.packages("stargazer")
+library(stargazer)
+
+# Song released April 27, 2017, week number: 381 (April 22, 2017)
+# MTV video music award: august 27 2017: week number: 400
+# Performance at grammy awards on 28 january 2018, week 422
+#2017 start at 366, finish at 418
+
+
+# New variable
+dfcanada$treatment<-0
+dfcanada[dfcanada$week_number==382,]$treatment<-0
+dfcanada[dfcanada$week_number==401,]$treatment<-0
+dfcanada[dfcanada$week_number==423,]$treatment<-1
+
+# First model
+model1 <- lm(suicides ~ treatment, data = dfcanada)
+summary(model1)
+
+# Second model
+#Restrict sample to week 
+
+
+
+
+# Puedes usar stargazer para convertir el resumen del modelo en una tabla de LaTeX
+stargazer(model1, title="Resultados de la Regresión", label="tab:model1", 
+          header=FALSE, type = "latex")
+
