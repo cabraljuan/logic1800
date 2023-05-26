@@ -230,23 +230,41 @@ graph2 + geom_vline(xintercept = 329) +geom_vline(xintercept = 348)
 ##################################################################
 ##                         OLS analysis                         ##
 ##################################################################
-install.packages("stargazer")
 library(stargazer)
 
 # Song released April 27, 2017, week number: 381 (April 22, 2017)
-# MTV video music award: august 27 2017: week number: 400
+# Youtube video released august 17 2017: week number: 397 (aug 12, 2017)
+# MTV video music award: august 27 2017: week number: 400 (didn't get so much attention)
 # Performance at grammy awards on 28 january 2018, week 422
 #2017 start at 366, finish at 418
 
 
 # New variable
 dfcanada$treatment<-0
-dfcanada[dfcanada$week_number==382,]$treatment<-0
-dfcanada[dfcanada$week_number==401,]$treatment<-0
+dfcanada[dfcanada$week_number==382,]$treatment<-1
+dfcanada[dfcanada$week_number==398,]$treatment<-1
 dfcanada[dfcanada$week_number==423,]$treatment<-1
 
+# Month dummies
+dfcanada$jan <- as.integer(grepl("Jan", dfcanada$period, ignore.case = TRUE))
+dfcanada$feb <- as.integer(grepl("Feb", dfcanada$period, ignore.case = TRUE))
+dfcanada$mar <- as.integer(grepl("March", dfcanada$period, ignore.case = TRUE))
+dfcanada$apr <- as.integer(grepl("April", dfcanada$period, ignore.case = TRUE))
+dfcanada$may <- as.integer(grepl("May", dfcanada$period, ignore.case = TRUE))
+dfcanada$jun <- as.integer(grepl("June", dfcanada$period, ignore.case = TRUE))
+dfcanada$jul <- as.integer(grepl("July", dfcanada$period, ignore.case = TRUE))
+dfcanada$aug <- as.integer(grepl("August", dfcanada$period, ignore.case = TRUE))
+dfcanada$sept <- as.integer(grepl("September", dfcanada$period, ignore.case = TRUE))
+dfcanada$oct <- as.integer(grepl("October", dfcanada$period, ignore.case = TRUE))
+dfcanada$nov <- as.integer(grepl("November", dfcanada$period, ignore.case = TRUE))
+dfcanada$dec <- as.integer(grepl("December", dfcanada$period, ignore.case = TRUE))
+
+# Quadratic time
+dfcanada$week_numberq<-(dfcanada$week_number)*(dfcanada$week_number)
+
 # First model
-model1 <- lm(suicides ~ treatment, data = dfcanada)
+model1 <- lm(suicides ~ treatment + jan +feb+mar+apr+may+jun+
+               jul+aug+sept+oct+nov+week_number+week_numberq, data = dfcanada)
 summary(model1)
 
 # Second model
