@@ -13,6 +13,8 @@ library(bannerCommenter)
 library(readr)
 library(dplyr)
 library(ggplot2)
+# Disable scientific notation
+options(scipen=999)
 
 
 # Set WD 
@@ -212,23 +214,20 @@ dfcanada<-unique(dfcanada)
 
 
 # Song released April 27, 2017, week number: 381 (April 22, 2017)
-# MTV video music award: august 27 2017: week number: 400
-# Performance at grammy awards on 28 january 2018, week 422
+# Album released may 5, 2017, week  number 382 (april 29)
+# MTV video music award: august 27 2017: week number: 399 (august 26)
+# Remix released october 13, 2017, week number: 405
+# Performance at grammy awards on 28 january 2018, week number: 420 (January 20, 2018)
 #2017 start at 366, finish at 418
-start_date<-313
-finish_date<-450
-dfcanada_filtered <- dfcanada[dfcanada$week_number >= start_date & dfcanada$week_number <= finish_date, ]
-graph <- ggplot(dfcanada_filtered, aes(x=week_number, y=suicides)) +
-  geom_line() +   theme_bw()   +
-  xlab("")
-graph
-
-graph + geom_vline(xintercept = 381) +geom_vline(xintercept = 400) +
-  geom_vline(xintercept= 422)+ geom_vline(xintercept = 329) +geom_vline(xintercept = 348)+ geom_vline(xintercept = 369)
-
-
-
 #2016 start at 313, finish at 365
+
+treatment1<-381
+treatment2<-399
+treatment3<-420
+treatment4<-405
+treatment5<-382
+
+
 start_date<-366
 finish_date<-450
 dfcanada_filtered <- dfcanada[dfcanada$week_number >= start_date & dfcanada$week_number <= finish_date, ]
@@ -242,12 +241,13 @@ graph2 <- ggplot(dfcanada_filtered, aes(x=week_number, y=suicides)) +
 graph2
 
 # Adding marks
-graph2<-graph2 + geom_vline(xintercept = 381,  color="darkred",size=1.0) +
-  geom_vline(xintercept = 400,  color="darkred",size=1.0)+ 
-  geom_vline(xintercept = 422,  color="darkred",size=1.0)+ 
-  annotate("text", x = 381, y = max(dfcanada_filtered$suicides), label = "Song released", hjust = -0.1) +
-  annotate("text", x = 400, y = max(dfcanada_filtered$suicides), label = "MTV video music award", hjust = -0.1) +
-  annotate("text", x = 422, y = max(dfcanada_filtered$suicides), label = "Performance at grammy awards", hjust = -0.1) 
+graph2<-graph2 + 
+  geom_vline(xintercept = treatment1,  color="darkred",size=1.0) +
+  geom_vline(xintercept = treatment2,  color="darkred",size=1.0)+ 
+  geom_vline(xintercept = treatment3,  color="darkred",size=1.0)+ 
+  annotate("text", x = treatment1, y = max(dfcanada_filtered$suicides), label = "Song released", hjust = -0.1) +
+  annotate("text", x = treatment2, y = max(dfcanada_filtered$suicides), label = "MTV video music award", hjust = -0.1) +
+  annotate("text", x = treatment3, y = max(dfcanada_filtered$suicides), label = "Performance at grammy awards", hjust = -0.1) 
 
 graph2
 ggsave("output/graphs/suicide_weekly_data_2017_2018.jpg", plot = graph2, width = 10, height = 6, dpi = 300)
@@ -262,17 +262,20 @@ ggsave("output/graphs/suicide_weekly_data_2017_2018.jpg", plot = graph2, width =
 library(stargazer)
 
 # Song released April 27, 2017, week number: 381 (April 22, 2017)
-# Youtube video released august 17 2017: week number: 397 (aug 12, 2017)
-# MTV video music award: august 27 2017: week number: 400 (didn't get so much attention)
-# Performance at grammy awards on 28 january 2018, week 422
+# Album released may 5, 2017, week  number 382 (april 29)
+# MTV video music award: august 27 2017: week number: 399 (august 26)
+# Remix released october 13, 2017, week number: 405
+# Performance at grammy awards on 28 january 2018, week number: 420 (January 20, 2018)
 #2017 start at 366, finish at 418
 
-
-# New variable
+# New variable. Treatment is one week after each event
 dfcanada$treatment<-0
-dfcanada[dfcanada$week_number==382,]$treatment<-1
-dfcanada[dfcanada$week_number==398,]$treatment<-1
-dfcanada[dfcanada$week_number==423,]$treatment<-1
+dfcanada[dfcanada$week_number==treatment1+1,]$treatment<-1
+dfcanada[dfcanada$week_number==treatment2+1,]$treatment<-1
+dfcanada[dfcanada$week_number==treatment3+1,]$treatment<-1
+dfcanada[dfcanada$week_number==treatment4+1,]$treatment<-1
+dfcanada[dfcanada$week_number==treatment5+1,]$treatment<-1
+
 
 # Month dummies
 dfcanada$jan <- as.integer(grepl("Jan", dfcanada$period, ignore.case = TRUE))
@@ -297,12 +300,14 @@ model1 <- lm(suicides ~ treatment + jan +feb+mar+apr+may+jun+
 summary(model1)
 
 # Second model
+model2 <- lm(suicides ~ treatment , data = dfcanada)
+summary(model2)
+
+# Second model
 #Restrict sample to week 
 
 
 
-
-# Puedes usar stargazer para convertir el resumen del modelo en una tabla de LaTeX
 stargazer(model1, title="Resultados de la Regresión", label="tab:model1", 
           header=FALSE, type = "latex")
 
