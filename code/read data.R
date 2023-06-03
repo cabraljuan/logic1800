@@ -103,11 +103,6 @@ dfcanada<-dfcanada[!(is.na(dfcanada$canada_deaths)),]
 dfcanada<-unique(dfcanada)
 
 
-##################################################################
-##                            Graphs                            ##
-##################################################################
-
-
 
 # Song released April 27, 2017, week number: 381 (April 22, 2017)
 #2017 start at 366, finish at 418
@@ -209,7 +204,13 @@ dfcanada<-df[!(is.na(df$suicides)),]
 dfcanada<-unique(dfcanada)
 
 
-# GRAPH
+
+##################################################################
+##                            Graphs                            ##
+##################################################################
+
+
+
 # Song released April 27, 2017, week number: 381 (April 22, 2017)
 # MTV video music award: august 27 2017: week number: 400
 # Performance at grammy awards on 28 january 2018, week 422
@@ -241,15 +242,15 @@ graph2 <- ggplot(dfcanada_filtered, aes(x=week_number, y=suicides)) +
 graph2
 
 # Adding marks
-graph2 + geom_vline(xintercept = 381,  color="darkred",size=1.0) +
+graph2<-graph2 + geom_vline(xintercept = 381,  color="darkred",size=1.0) +
   geom_vline(xintercept = 400,  color="darkred",size=1.0)+ 
   geom_vline(xintercept = 422,  color="darkred",size=1.0)+ 
   annotate("text", x = 381, y = max(dfcanada_filtered$suicides), label = "Song released", hjust = -0.1) +
   annotate("text", x = 400, y = max(dfcanada_filtered$suicides), label = "MTV video music award", hjust = -0.1) +
   annotate("text", x = 422, y = max(dfcanada_filtered$suicides), label = "Performance at grammy awards", hjust = -0.1) 
 
-
-ggsave("my_plot.png", plot = my_plot, width = 10, height = 6, dpi = 300)
+graph2
+ggsave("output/graphs/suicide_weekly_data_2017_2018.jpg", plot = graph2, width = 10, height = 6, dpi = 300)
 
 
 
