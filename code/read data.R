@@ -12,6 +12,8 @@ library(bannerCommenter)
 #library(tidyr)
 library(readr)
 library(dplyr)
+library(ggplot2)
+
 
 # Set WD 
 setwd("C:/Users/juanc/Desktop/Papers/logic1800/")
@@ -99,7 +101,14 @@ dfcanada<-dfcanada[!(is.na(dfcanada$canada_deaths)),]
 
 #remove duplicated rows
 dfcanada<-unique(dfcanada)
-# GRAPH
+
+
+##################################################################
+##                            Graphs                            ##
+##################################################################
+
+
+
 # Song released April 27, 2017, week number: 381 (April 22, 2017)
 #2017 start at 366, finish at 418
 start_date<-366
@@ -129,9 +138,14 @@ graph2 + geom_vline(xintercept = 329)
 
 
 
-##################################################################
-##                         Suicide data                         ##
-##################################################################
+############################################################################
+############################################################################
+###                                                                      ###
+###                             SUICIDE DATA                             ###
+###                                                                      ###
+############################################################################
+############################################################################
+
 
 
 
@@ -178,6 +192,7 @@ unique(df$suicides)
 
 # Correct column type
 df$suicides<-as.numeric(df$suicides)
+# Places like YUKON doesn't have so much data, most NA's are introduced there
 
 #keep only canada
 df<-df[df$place=="Canada, place of occurrence",]
@@ -192,6 +207,8 @@ dfcanada<-df[!(is.na(df$suicides)),]
 
 # Remove duplicated rows
 dfcanada<-unique(dfcanada)
+
+
 # GRAPH
 # Song released April 27, 2017, week number: 381 (April 22, 2017)
 # MTV video music award: august 27 2017: week number: 400
@@ -200,7 +217,6 @@ dfcanada<-unique(dfcanada)
 start_date<-313
 finish_date<-450
 dfcanada_filtered <- dfcanada[dfcanada$week_number >= start_date & dfcanada$week_number <= finish_date, ]
-library(ggplot2)
 graph <- ggplot(dfcanada_filtered, aes(x=week_number, y=suicides)) +
   geom_line() +   theme_bw()   +
   xlab("")
@@ -212,21 +228,33 @@ graph + geom_vline(xintercept = 381) +geom_vline(xintercept = 400) +
 
 
 #2016 start at 313, finish at 365
-start_date<-313
-finish_date<-365
+start_date<-366
+finish_date<-450
 dfcanada_filtered <- dfcanada[dfcanada$week_number >= start_date & dfcanada$week_number <= finish_date, ]
 library(ggplot2)
 graph2 <- ggplot(dfcanada_filtered, aes(x=week_number, y=suicides)) +
-  geom_line() +   theme_bw()   +
-  xlab("")
+      theme_minimal()  +  labs(title = "Suicides in Canada per Week (2017 to 2018)", 
+                                            x = "Week Number", 
+                                            y = "Number of Suicides") +
+  geom_line(color = 'steelblue', size = 1.2, linetype = 'solid') +
+  geom_point(color = 'darkred', size = 2) 
 graph2
 
-graph2 + geom_vline(xintercept = 329) +geom_vline(xintercept = 348)
+# Adding marks
+graph2 + geom_vline(xintercept = 381,  color="darkred",size=1.0) +
+  geom_vline(xintercept = 400,  color="darkred",size=1.0)+ 
+  geom_vline(xintercept = 422,  color="darkred",size=1.0)+ 
+  annotate("text", x = 381, y = max(dfcanada_filtered$suicides), label = "Song released", hjust = -0.1) +
+  annotate("text", x = 400, y = max(dfcanada_filtered$suicides), label = "MTV video music award", hjust = -0.1) +
+  annotate("text", x = 422, y = max(dfcanada_filtered$suicides), label = "Performance at grammy awards", hjust = -0.1) 
+
+
+ggsave("my_plot.png", plot = my_plot, width = 10, height = 6, dpi = 300)
 
 
 
-# More time variables
-#variable for years, variable for weeks of month
+
+
 ##################################################################
 ##                         OLS analysis                         ##
 ##################################################################
