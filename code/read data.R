@@ -273,8 +273,8 @@ dfcanada$treatment<-0
 dfcanada[dfcanada$week_number==treatment1+1,]$treatment<-1
 dfcanada[dfcanada$week_number==treatment2+1,]$treatment<-1
 dfcanada[dfcanada$week_number==treatment3+1,]$treatment<-1
-dfcanada[dfcanada$week_number==treatment4+1,]$treatment<-1
-dfcanada[dfcanada$week_number==treatment5+1,]$treatment<-1
+#dfcanada[dfcanada$week_number==treatment4+1,]$treatment<-1
+#dfcanada[dfcanada$week_number==treatment5+1,]$treatment<-1
 
 
 # Month dummies
@@ -290,6 +290,11 @@ dfcanada$sept <- as.integer(grepl("September", dfcanada$period, ignore.case = TR
 dfcanada$oct <- as.integer(grepl("October", dfcanada$period, ignore.case = TRUE))
 dfcanada$nov <- as.integer(grepl("November", dfcanada$period, ignore.case = TRUE))
 dfcanada$dec <- as.integer(grepl("December", dfcanada$period, ignore.case = TRUE))
+
+# Week category
+dfcanada$week<-substr(dfcanada$period, 1, nchar(dfcanada$period) - 6)
+unique(dfcanada$week)
+class(dfcanada$week)
 
 # Quadratic time
 dfcanada$week_numberq<-(dfcanada$week_number)*(dfcanada$week_number)
