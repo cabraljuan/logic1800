@@ -305,7 +305,7 @@ summary(model2)
 
 # Second model
 #Restrict sample to week 
-
+#
 
 
 stargazer(model1, title="Resultados de la Regresión", label="tab:model1", 
